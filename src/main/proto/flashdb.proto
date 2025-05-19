@@ -43,8 +43,37 @@ message DeleteResponse {
     string message = 2;
 }
 
+// Request message for creating a database
+message CreateDatabaseRequest {
+    string database = 1;
+}
+
+// Response message for creating a database
+message CreateDatabaseResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Request message for deleting a database
+message DeleteDatabaseRequest {
+    string database = 1;
+}
+
+// Response message for deleting a database
+message DeleteDatabaseResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+
 // The FlashDB service definition
 service FlashDBService {
+    // Create a database
+    rpc CreateDatabase(CreateDatabaseRequest) returns (CreateDatabaseResponse) {}
+
+    // Delete a database
+    rpc DeleteDatabase(DeleteDatabaseRequest) returns (DeleteDatabaseResponse) {}
+
     // Get value for a key
     rpc Get(GetRequest) returns (GetResponse) {}
 

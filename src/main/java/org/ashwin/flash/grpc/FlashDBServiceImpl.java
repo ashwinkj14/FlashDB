@@ -2,6 +2,10 @@ package org.ashwin.flash.grpc;
 
 import org.ashwin.flash.database.engine.Database;
 import org.ashwin.flash.database.service.StorageService;
+import org.ashwin.flash.proto.CreateDatabaseRequest;
+import org.ashwin.flash.proto.CreateDatabaseResponse;
+import org.ashwin.flash.proto.DeleteDatabaseRequest;
+import org.ashwin.flash.proto.DeleteDatabaseResponse;
 import org.ashwin.flash.proto.FlashDBServiceGrpc;
 import org.ashwin.flash.proto.GetRequest;
 import org.ashwin.flash.proto.GetResponse;
@@ -15,6 +19,36 @@ import net.devh.boot.grpc.server.service.GrpcService;
 
 @GrpcService
 public class FlashDBServiceImpl extends FlashDBServiceGrpc.FlashDBServiceImplBase {
+
+    @Override
+    public void createDatabase(CreateDatabaseRequest request, StreamObserver<CreateDatabaseResponse> responseObserver) {
+        String databaseName = request.getDatabase();
+        boolean created = StorageService.getInstance().createDatabase(databaseName);
+
+        CreateDatabaseResponse response = CreateDatabaseResponse.newBuilder()
+                .setSuccess(created)
+                .setMessage(created ?
+                        "Database successfully created" :
+                        "Database already exists")
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deleteDatabase(DeleteDatabaseRequest request, StreamObserver<DeleteDatabaseResponse> responseObserver) {
+        String databaseName = request.getDatabase();
+        StorageService.getInstance().deleteDatabase(databaseName);
+
+        DeleteDatabaseResponse response = DeleteDatabaseResponse.newBuilder()
+                .setSuccess(true)
+                .setMessage("Database successfully deleted")
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 
     @Override
     public void get(GetRequest request, StreamObserver<GetResponse> responseObserver) {
