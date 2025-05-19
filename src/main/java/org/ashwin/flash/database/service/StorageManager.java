@@ -94,6 +94,7 @@ class StorageManager {
         }
 
         dataDirectory.delete();
+        databases.remove(databaseName);
         logger.info("Database directory deleted: " + dataDirectory.getAbsolutePath());
     }
 
