@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Memtable {
-    private final TreeMap<String, String> memtable;
+    private final TreeMap<String, byte[]> memtable;
     private final int capacity;
 
     public Memtable(int capacity) {
@@ -12,11 +12,11 @@ public class Memtable {
         this.capacity = capacity;
     }
 
-    public void put(String key, String value) {
+    public void put(String key, byte[] value) {
         memtable.put(key, value);
     }
 
-    public String get(String key) {
+    public byte[] get(String key) {
         return memtable.get(key);
     }
 
@@ -28,8 +28,8 @@ public class Memtable {
         return memtable.size() >= capacity;
     }
 
-    public Map<String, String> flush() {
-        Map<String, String> data = new TreeMap<>(memtable);
+    public Map<String, byte[]> flush() {
+        Map<String, byte[]> data = new TreeMap<>(memtable);
         memtable.clear();
         return data;
     }

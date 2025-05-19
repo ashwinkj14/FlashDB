@@ -1,6 +1,10 @@
 package org.ashwin.flash.database.engine;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class SSTable {
@@ -11,26 +15,41 @@ public class SSTable {
         this.filePath = filePath;
     }
 
-    public void write(Map<String, String> data) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (Map.Entry<String, String> entry : data.entrySet()) {
-                writer.write(entry.getKey() + ":" + entry.getValue());
-                writer.newLine();
+    public void write(Map<String, byte[]> data) throws IOException {
+        try (DataOutputStream dos = new DataOutputStream(Files.newOutputStream(Paths.get(filePath)))) {
+            for (Map.Entry<String, byte[]> entry : data.entrySet()) {
+                byte[] keyBytes = entry.getKey().getBytes();
+                byte[] valueBytes = entry.getValue();
+
+                dos.writeInt(keyBytes.length);
+                dos.write(keyBytes);
+
+                dos.writeInt(valueBytes.length);
+                dos.write(valueBytes);
             }
         }
     }
 
-    public String read(String key) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] keyValue = line.split(":");
-                if (keyValue[0].equals(key)) {
-                    key = keyValue[1];
+
+    public byte[] read(String targetKey) throws IOException {
+        try (DataInputStream dis = new DataInputStream(Files.newInputStream(Paths.get(filePath)))) {
+            while (dis.available() > 0) {
+                int keyLength = dis.readInt();
+                byte[] keyBytes = new byte[keyLength];
+                dis.readFully(keyBytes);
+                String key = new String(keyBytes);
+
+                int valueLength = dis.readInt();
+                byte[] valueBytes = new byte[valueLength];
+                dis.readFully(valueBytes);
+
+                if (key.equals(targetKey)) {
+                    return valueBytes;
                 }
             }
         }
         return null;
     }
+
 
 }
