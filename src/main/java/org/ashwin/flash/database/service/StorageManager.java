@@ -66,14 +66,11 @@ class StorageManager {
         sstableDirectory.mkdirs();
         logger.info("SSTable directory created: " + sstableDirectory.getAbsolutePath());
 
+        databases.put(databaseName, new Database(databaseName));
         return true;
     }
 
     public Database getDatabase(String databaseName) {
-        if (!databases.containsKey(databaseName)) {
-            Database database = new Database(databaseName);
-            databases.put(databaseName, database);
-        }
         return databases.get(databaseName);
     }
 
