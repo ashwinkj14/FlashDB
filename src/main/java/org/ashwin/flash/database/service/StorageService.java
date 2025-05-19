@@ -1,7 +1,7 @@
 package org.ashwin.flash.database.service;
 
 import org.ashwin.flash.config.FlashProperties;
-import org.ashwin.flash.database.engine.Database;
+import org.ashwin.flash.database.core.Database;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package org.ashwin.flash.database.engine;
+package org.ashwin.flash.database.core;
 
 import org.ashwin.flash.config.FlashProperties;
 import org.slf4j.Logger;

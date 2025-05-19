@@ -1,4 +1,4 @@
-package org.ashwin.flash.database.engine;
+package org.ashwin.flash.database.core;
 
 import java.util.Map;
 import java.util.TreeMap;

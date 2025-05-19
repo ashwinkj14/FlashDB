@@ -1,7 +1,8 @@
-package org.ashwin.flash.database.engine;
+package org.ashwin.flash.database.core;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,6 +15,8 @@ public class SSTable {
     public SSTable(String filePath) {
         this.filePath = filePath;
     }
+
+    public record Pair(String key, byte[] value) {}
 
     public void write(Map<String, byte[]> data) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(Files.newOutputStream(Paths.get(filePath)))) {
@@ -51,6 +54,9 @@ public class SSTable {
         return null;
     }
 
-    public record Pair(String key, byte[] value) {}
+    public void delete() {
+        new File(filePath).delete();
+    }
+
 
 }

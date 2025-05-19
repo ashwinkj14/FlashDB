@@ -1,4 +1,4 @@
-package org.ashwin.flash.database.engine;
+package org.ashwin.flash.database.core;
 
 import org.ashwin.flash.database.service.StorageService;
 import org.junit.jupiter.api.AfterAll;
