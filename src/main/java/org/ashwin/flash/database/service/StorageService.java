@@ -1,5 +1,10 @@
 package org.ashwin.flash.database.service;
 
+import org.ashwin.flash.config.FlashProperties;
+import org.ashwin.flash.database.engine.Database;
+
+import java.io.File;
+
 public class StorageService {
 
     private static StorageService service;
@@ -16,8 +21,21 @@ public class StorageService {
         return service;
     }
 
+    public boolean isDatabaseExists(String databaseName) {
+        String databasePath = FlashProperties.DATA_DIR.getDefaultValue() + File.separator + databaseName;
+        return new File(databasePath).exists();
+    }
+
     public boolean createDatabase(String databaseName) {
-        return storageManager.createDatabaseDirectory(databaseName);
+        return storageManager.createDatabase(databaseName);
+    }
+
+    public Database getDatabase(String databaseName) {
+        return storageManager.getDatabase(databaseName);
+    }
+
+    public void deleteDatabase(String databaseName) {
+        storageManager.deleteDatabase(databaseName);
     }
 
 }
