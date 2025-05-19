@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package flashdb;
+
+option java_package = "org.ashwin.flash.proto";
+option java_multiple_files = true;
+option java_outer_classname = "FlashDBProto";
+
+// Request message for getting a value
+message GetRequest {
+    string database = 1;
+    string key = 2;
+}
+
+// Response message containing the value
+message GetResponse {
+    bool found = 1;
+    bytes value = 2;
+}
+
+// Request message for setting a key-value pair
+message SetRequest {
+    string database = 1;
+    string key = 2;
+    bytes value = 3;
+}
+
+// Response message for set operation
+message SetResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Request message for deleting a key
+message DeleteRequest {
+    string database = 1;
+    string key = 2;
+}
+
+// Response message for delete operation
+message DeleteResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// The FlashDB service definition
+service FlashDBService {
+    // Get value for a key
+    rpc Get(GetRequest) returns (GetResponse) {}
+
+    // Set a key-value pair
+    rpc Set(SetRequest) returns (SetResponse) {}
+
+    // Delete a key
+    rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+}
