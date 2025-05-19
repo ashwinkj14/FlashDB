@@ -14,10 +14,7 @@ import org.ashwin.flash.proto.SetResponse;
 import org.ashwin.flash.proto.DeleteRequest;
 import org.ashwin.flash.proto.DeleteResponse;
 import io.grpc.stub.StreamObserver;
-import net.devh.boot.grpc.server.service.GrpcService;
 
-
-@GrpcService
 public class FlashDBServiceImpl extends FlashDBServiceGrpc.FlashDBServiceImplBase {
 
     @Override
