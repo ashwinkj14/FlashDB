@@ -55,6 +55,14 @@ public class FlashDBServiceImpl extends FlashDBServiceGrpc.FlashDBServiceImplBas
         String key = request.getKey();
         String databaseName = request.getDatabase();
         Database database = StorageService.getInstance().getDatabase(databaseName);
+        if (database == null) {
+            GetResponse response = GetResponse.newBuilder()
+                    .setFound(false)
+                    .build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+            return;
+        }
         byte[] value = database.get(key);
 
         GetResponse response;
@@ -79,6 +87,16 @@ public class FlashDBServiceImpl extends FlashDBServiceGrpc.FlashDBServiceImplBas
             String key = request.getKey();
             String databaseName = request.getDatabase();
             Database database = StorageService.getInstance().getDatabase(databaseName);
+            if (database == null) {
+                SetResponse response = SetResponse.newBuilder()
+                    .setSuccess(false)
+                    .setMessage("Database not found")
+                    .build();
+
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+                return;
+            }
             byte[] value = request.getValue().toByteArray();
 
             database.put(key, value);
@@ -106,6 +124,16 @@ public class FlashDBServiceImpl extends FlashDBServiceGrpc.FlashDBServiceImplBas
         String key = request.getKey();
         String databaseName = request.getDatabase();
         Database database = StorageService.getInstance().getDatabase(databaseName);
+        if (database == null) {
+            DeleteResponse response = DeleteResponse.newBuilder()
+                .setSuccess(false)
+                .setMessage("Database not found")
+                .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+            return;
+        }
         boolean removed = database.delete(key);
 
         DeleteResponse response = DeleteResponse.newBuilder()
