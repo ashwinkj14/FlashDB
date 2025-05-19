@@ -9,8 +9,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class StorageManager {
+class StorageManager {
 
     private static final Logger logger = LoggerFactory.getLogger(StorageManager.class);
     private static StorageManager manager = null;
@@ -18,7 +17,7 @@ public class StorageManager {
 
     private StorageManager() { init(); }
 
-    public static synchronized StorageManager getInstance() {
+    static synchronized StorageManager getInstance() {
         if (manager == null){
             manager = new StorageManager();
         }
