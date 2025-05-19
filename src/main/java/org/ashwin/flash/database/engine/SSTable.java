@@ -31,7 +31,7 @@ public class SSTable {
     }
 
 
-    public byte[] read(String targetKey) throws IOException {
+    public Pair read(String targetKey) throws IOException {
         try (DataInputStream dis = new DataInputStream(Files.newInputStream(Paths.get(filePath)))) {
             while (dis.available() > 0) {
                 int keyLength = dis.readInt();
@@ -44,12 +44,13 @@ public class SSTable {
                 dis.readFully(valueBytes);
 
                 if (key.equals(targetKey)) {
-                    return valueBytes;
+                    return new Pair(key, valueBytes);
                 }
             }
         }
         return null;
     }
 
+    public record Pair(String key, byte[] value) {}
 
 }

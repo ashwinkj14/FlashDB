@@ -40,16 +40,15 @@ public class LSMTree {
     }
 
     public byte[] get(String key) {
-        byte[] value = memTable.get(key);
-        if (value != null) {
-            return value;
+        if (memTable.containsKey(key)) {
+            return memTable.get(key);
         }
 
         try {
             for (SSTable sstable : sstables) {
-                value = sstable.read(key);
-                if (value != null) {
-                    return value;
+                SSTable.Pair pair = sstable.read(key);
+                if (pair != null) {
+                    return pair.value();
                 }
             }
         } catch (Exception e) {
@@ -59,7 +58,7 @@ public class LSMTree {
     }
 
     public boolean delete(String key) {
-        if (memTable.get(key) == null) {
+        if (get(key) == null) {
             return false;
         }
         memTable.put(key, null);
@@ -96,7 +95,7 @@ public class LSMTree {
         Arrays.sort(files, (f1, f2) -> {
             int id1 = extractSSTableId(f1.getName());
             int id2 = extractSSTableId(f2.getName());
-            return Integer.compare(id1, id2);
+            return Integer.compare(id2, id1);
         });
 
         for (File file : files) {

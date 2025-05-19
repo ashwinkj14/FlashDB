@@ -20,6 +20,10 @@ public class Memtable {
         return memtable.get(key);
     }
 
+    public boolean containsKey(String key) {
+        return memtable.containsKey(key);
+    }
+
     public int size() {
         return memtable.size();
     }
