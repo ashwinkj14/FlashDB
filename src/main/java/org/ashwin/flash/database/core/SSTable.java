@@ -3,23 +3,38 @@ package org.ashwin.flash.database.core;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class SSTable {
 
-    private final String filePath;
-
-    public SSTable(String filePath) {
-        this.filePath = filePath;
-    }
+    private final File file;
+    private final long sequenceNumber;
 
     public record Pair(String key, byte[] value) {}
 
+    public SSTable(long sequenceNumber, String filePath) {
+        this.sequenceNumber = sequenceNumber;
+        this.file = new File(filePath);
+    }
+
+    public long getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public String getFileName() {
+        return file.getName();
+    }
+
+    public void delete() {
+        file.delete();
+    }
+
     public void write(Map<String, byte[]> data) throws IOException {
-        try (DataOutputStream dos = new DataOutputStream(Files.newOutputStream(Paths.get(filePath)))) {
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(file))) {
             for (Map.Entry<String, byte[]> entry : data.entrySet()) {
                 byte[] keyBytes = entry.getKey().getBytes();
                 byte[] valueBytes = entry.getValue();
@@ -33,9 +48,8 @@ public class SSTable {
         }
     }
 
-
     public Pair read(String targetKey) throws IOException {
-        try (DataInputStream dis = new DataInputStream(Files.newInputStream(Paths.get(filePath)))) {
+        try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
             while (dis.available() > 0) {
                 int keyLength = dis.readInt();
                 byte[] keyBytes = new byte[keyLength];
@@ -54,8 +68,20 @@ public class SSTable {
         return null;
     }
 
-    public void delete() {
-        new File(filePath).delete();
+    public Map<String, byte[]> readAll() {
+        Map<String, byte[]> map = new TreeMap<>();
+        try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
+            while (in.available() > 0) {
+                String key = in.readUTF();
+                int len = in.readInt();
+                byte[] val = new byte[len];
+                in.readFully(val);
+                map.put(key, val);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read SSTable", e);
+        }
+        return map;
     }
 
 
