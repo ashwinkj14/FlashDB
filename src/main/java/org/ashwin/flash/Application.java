@@ -6,6 +6,7 @@ import io.grpc.ServerBuilder;
 import io.grpc.ServerCall;
 import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
+import org.ashwin.flash.database.service.StorageService;
 import org.ashwin.flash.grpc.FlashDBServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class Application {
         logger.info("Flash gRPC Server started on port " + PORT);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            StorageService.getInstance().shutdown();
             logger.info("Shutting down gRPC server...");
             if (server != null) {
                 server.shutdown();

@@ -38,4 +38,8 @@ public class StorageService {
         storageManager.deleteDatabase(databaseName);
     }
 
+    public void shutdown() {
+        storageManager.shutdown();
+    }
+
 }

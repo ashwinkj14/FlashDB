@@ -31,7 +31,7 @@ class StorageManager {
     }
 
     private void createDataDirectory() {
-        File dataDirectory = new File(FlashProperties.DATA_DIR.getDefaultValue());
+        File dataDirectory = new File(FlashProperties.DATA_DIR.getDefaultValue().toString());
         if (!dataDirectory.exists()) {
             dataDirectory.mkdirs();
             logger.info("Data directory created: " + dataDirectory.getAbsolutePath());
@@ -39,7 +39,7 @@ class StorageManager {
     }
 
     private void loadDatabases() {
-        File dataDirectory = new File(FlashProperties.DATA_DIR.getDefaultValue());
+        File dataDirectory = new File(FlashProperties.DATA_DIR.getDefaultValue().toString());
         File[] files = dataDirectory.listFiles(File::isDirectory);
         if (files != null) {
             for (File file : files) {
@@ -93,6 +93,10 @@ class StorageManager {
         dataDirectory.delete();
         databases.remove(databaseName);
         logger.info("Database directory deleted: " + dataDirectory.getAbsolutePath());
+    }
+
+    public void shutdown() {
+        databases.forEach((k, database) -> database.shutdown());
     }
 
 }
