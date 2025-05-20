@@ -1,6 +1,6 @@
 package org.ashwin.flash.grpc;
 
-import org.ashwin.flash.database.engine.Database;
+import org.ashwin.flash.database.core.Database;
 import org.ashwin.flash.database.service.StorageService;
 import org.ashwin.flash.proto.CreateDatabaseRequest;
 import org.ashwin.flash.proto.CreateDatabaseResponse;
