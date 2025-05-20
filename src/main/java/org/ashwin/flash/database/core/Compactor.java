@@ -17,7 +17,9 @@ public class Compactor {
 
     public void compact() {
         List<SSTable> sstables = sstableManager.getAllSSTables();
-
+        if (sstables.size() < 3) {
+            return;
+        }
         Map<String, byte[]> compacted = new TreeMap<>();
 
         sstables.sort(Comparator.comparingLong(SSTable::getSequenceNumber));
